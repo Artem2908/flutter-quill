@@ -472,7 +472,8 @@ class _QuillEditorSelectionGestureDetectorBuilder
       if (delegate.selectionEnabled && !_isPositionSelected(details)) {
         final platform = Theme.of(_state.context).platform;
         if (isAppleOS(platform: platform, supportWeb: true) ||
-            isDesktop(platform: platform, supportWeb: true)) {
+            isDesktop(platform: platform, supportWeb: true) ||
+            isAndroid(platform: platform, supportWeb: true)) {
           // added isDesktop() to enable extend selection in Windows platform
           switch (details.kind) {
             case PointerDeviceKind.mouse:
@@ -495,17 +496,9 @@ class _QuillEditorSelectionGestureDetectorBuilder
               break;
             case PointerDeviceKind.touch:
             case PointerDeviceKind.unknown:
-              // On macOS/iOS/iPadOS a touch tap places the cursor at the edge
-              // of the word.
-              if (_detectWordBoundary) {
-                renderEditor!
-                  ..selectWordEdge(SelectionChangedCause.tap)
-                  ..onSelectionCompleted();
-              } else {
-                renderEditor!
-                  ..selectPosition(cause: SelectionChangedCause.tap)
-                  ..onSelectionCompleted();
-              }
+              renderEditor!
+                ..selectPosition(cause: SelectionChangedCause.tap)
+                ..onSelectionCompleted();
               break;
             case PointerDeviceKind.trackpad:
               // TODO: Handle this case.
